@@ -1,0 +1,51 @@
+\subsection{Memory}
+
+These charts represent the memory usage of clients and servers during ephemeral and persistent experiments.
+
+These results were very similar to transport-layer experiments. \gls{http}/1 and \gls{http}/2 were the most memory efficient due to their simplicity and use of \gls{tcp} as transport protocol, which had similar results. \gls{http}/1+\gls{tls} and \gls{http}/2+\gls{tls} had increased memory usage due to \gls{tls} requirements for data encryption and \gls{tls} handshake. Finally, \gls{http}/3 had to use more memory due to QUIC’s overhead, which trades memory for efficiency.
+
+During ephemeral experiments, Go’s garbage collector also had problems dealing with the high rate of created clients. Problem that begins worse with small data sizes, but it gets amortized as data sizes gets larger, which results in slower responses from the server, allowing Go’s garbage collector time to do its job.
+
+\clearpage
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/charts/Persistent Application-Layer Client Memory Usage in MiB.png}
+    \caption{Persistent Application-Layer Client Memory Usage in MiB}
+    \label{fig:persistent_client_app_memory}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/charts/Ephemeral Application-Layer Client Memory Usage in MiB.png}
+    \caption{Ephemeral Application-Layer Client Memory Usage in MiB}
+    \label{fig:ephemeral_client_app_memory}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/charts/Parallel Persistent Application-Layer Client Memory Usage in MiB.png}
+    \caption{Parallel Persistent Application-Layer Client Memory Usage in MiB}
+    \label{fig:parallel_client_app_memory}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/charts/Persistent Application-Layer Server Memory Usage in MiB.png}
+    \caption{Persistent Application-Layer Server Memory Usage in MiB}
+    \label{fig:persistent_server_app_memory}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/charts/Ephemeral Application-Layer Server Memory Usage in MiB.png}
+    \caption{Ephemeral Application-Layer Server Memory Usage in MiB}
+    \label{fig:ephemeral_server_app_memory}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/charts/Parallel Persistent Application-Layer Server Memory Usage in MiB.png}
+    \caption{Parallel Persistent Application-Layer Server Memory Usage in MiB}
+    \label{fig:parallel_server_app_memory}
+\end{figure}

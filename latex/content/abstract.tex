@@ -1,0 +1,9 @@
+\section*{Abstract}
+
+QUIC is a transport-layer protocol created by Google intended to address some problems of TCP while maintaining compatibility with existing network infrastructure. It has shown to improve user-experience on multiple services and its adoption is increasing everyday.
+
+There is a lot of research showing the improvements of QUIC over TCP/TLS in multiple scenarios, but most of them focus on user-facing applications, generally using HTTP/3. The new version of HTTP runs exclusively over QUIC and it’s already supported by most of the browsers.
+
+This document will analyze the use of QUIC for interservice communication in a cloud environment and compare them with more traditional protocols. HTTP/3 will also be compared to its predecessors. Different environments will be used on the experiments to simulate real world production configurations, including high availability setups and use of Kubernetes.
+
+Cost is an important factor when running applications on cloud, compute resources generally are charged by the hour based on the amount of CPU and memory allocated. Therefore, the cost of running applications with QUIC on these environments will also be analyzed.
