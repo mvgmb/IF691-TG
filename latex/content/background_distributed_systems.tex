@@ -12,7 +12,7 @@ Once the application grows to a point it demands scaling, it will demand more re
 
 Distributed systems come into the scene to try solving these problems. It makes use of multiple computing devices spread over a network and have them coordinate efforts to perform some kind of task \cite{distributed_systems_principles}. It allows complex applications to be broken down into manageable chunks, each performing a different kind of functionality.
 
-Its components can be broken down into two categories of clients: persistent and ephemeral.
+Its components can be broken down into two categories of clients: ephemeral and persistent.
 
 An ephemeral client creates a single connection to the server, performs some sort of exchange of data, and then closes the connection once it’s finished. A common example is that of a job, a finite task that has to perform a large computation, batch-oriented tasks, or creating a database backup \cite{os_distributed_systems}.
 
@@ -26,15 +26,15 @@ The term “cloud” was used to refer to platforms for distributed computing as
 
 \subsubsection{\gls{iaas} \& Containerization}
 
-\gls{iaas} is a form of cloud computing that has become one of the most common ways to provision on-demand availability of infrastructure services without having to be directly managed by the user.
+\gls{iaas} is a form of cloud computing that has become one of the most common ways to provision on-demand availability of infrastructure services without having to be directly managed by the user \cite{what_is_cloud}.
 
 Users are not required to have their own data centers to be able to serve their applications, they can request resources to use a third party’s computing infrastructure using a pay-as-you-go method. Therefore, they only need to pay for the resources actually used, enabling them to easily scale when needed.
 
-Multiregional servers are also possible. Users are able to request resources in distinct regions to deal with traffic from different countries or due to some contractual requirements. Some providers even have more than one data center per region, capaciting users to build high availability systems that are able to deal with disaster scenarios, for instance the data center experiences a power outage.
+Multi regional servers are also possible. Users are able to request resources in distinct regions to deal with traffic from different countries or due to some contractual requirements. Some providers even have more than one data center per region, capaciting users to build high availability systems that are able to deal with disaster scenarios, for instance the data center experiences a power outage.
 
 As data centers machines processing power and capacity increased over the years, many resources never got to be used by the applications whereas their requirements were much lower. This causes a waste of computing resources that could otherwise be used by users, increasing providers’ revenue. Thus, \glspl{vm} came into existence. 
 
-\gls{vm}s consist of the virtualization of an \gls{os}, allowing one single physical host machine to have more than one virtual machine running at the same time while keeping them isolated from each other. This enables cloud providers to optimize the use of their resources by serving multiple \gls{vm}s while only having to use one physical host machine, consequently serving more than one user per machine.
+\gls{vm}s consist of the virtualization of an \gls{os}, allowing one single physical host machine to have more than one virtual machine running at the same time while keeping them isolated from each other \cite{what_is_cloud}. This enables cloud providers to optimize the use of their resources by serving multiple \gls{vm}s while only having to use one physical host machine, consequently serving more than one user per machine.
 
 Nevertheless, \gls{vm}s improve data centers resource efficiency, it can take up a lot of system resources. Each \gls{vm} requires a copy of an \gls{os} and a virtual copy of all the hardware that the \gls{os} needs to run, adding up to a lot of memory and \gls{cpu}. This is still more efficient than running separate physical host machines, but can be a deal-breaker for applications.
 
@@ -42,9 +42,9 @@ To improve application development, deployment and flexibility, containers were 
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/vm_vs_container.png}
-    \caption{VM vs Container Architecture}
-    {Source: ADD SOURCE}
+    \includegraphics[width=\linewidth]{figures/Blog.-Are-containers-..VM-Image-1-1024x435.png}
+    \caption{Containers versus Virtual Machines}
+    {Source: \cite{are_containers_replacing_virtual_machines}}
     \label{figure:vm_vs_container}
 \end{figure}
 
@@ -72,4 +72,6 @@ Within the \gls{k8s} it’s possible to have pods deployed to different regions 
 
 \subsection{Summary}
 
-<INSERT>
+This section finished all required aspects of managing distributed systems on cloud. Therefore, their challenges and benefits should be clear, as well as their importance to the computing world.
+
+The next section will bring details on how the implemented Benchmark Service will perform experiments. They are going to put previously described protocols to the test in a cloud environment. Consequently, being able to assess their results.

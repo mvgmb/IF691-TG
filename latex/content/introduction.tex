@@ -1,11 +1,28 @@
 \section{Introduction}
 
-<INSERT>
+QUIC is a transport-layer protocol developed with the intent of improving HTTPS traffic performance. It does that by replacing most HTTPS' components: HTTP/2, TCP, and TLS. Hence, it's able to deal with most of the Internet's traffic \cite{rfc9000}.
 
-\subsection{Objectives}
+QUIC was designed to allow updates to transport protocols without disrupting the existing networking stack. It achieves that by being implemented in user-space on top of UDP \cite{rfc9000}. Therefore, it allows it to be improved faster than it would be if it was implemented in a lower level.
 
-<INSERT>
+Initially, the focus of QUIC's implementation was performance and not efficiency, resulting in CPU usage that was 3.5 times higher when compared with TCP+TLS \cite{quic_protocol}. Since then, optimizations were made to improve compute resources usage. Nonetheless, it's predicted that there will always be higher compute resources consumption than.
+
+Different studies show the improvements of QUIC when used on user-facing applications. However, it's rare to find studies regarding its use on back-end services. Therefore, this study analyzes the use of QUIC for internal communications between services on a cloud environment. Checking if its benefits and drawbacks still holdup in this scenario.
+
+To accomplish the objective of this study, a service will be written using QUIC and more traditional communication protocols. This benchmark service will be deployed on a \gls{k8s} Cluster to simulate a real production environment. Metrics regarding latency, throughput, and usage of CPU and memory will be collected. 
+With the metrics in hand, the protocols will be compared with each other. Explaining in detail the results found. Concluding which protocol would be better for use case analyzed in this study.
 
 \subsection{Document Structure}
 
-<INSERT>
+This document is structured in seven chapters, starting with this introduction. 
+
+The second chapter gives a general background in protocols analyzed throughout this study.
+
+The third chapter gives a general background in distributed systems on cloud, which is the environment used throughout this study.
+
+The fourth chapter explains how experiments setup was made. It describes the benchmark service, how it is experimented in different scenarios and how metrics are collected.
+
+The fifth chapter analyzes the results of ephemeral and persistent clients experiments. Transport-layer and application-layer clients latency, throughput, and usage of CPU and memory are compared.
+
+The sixth chapter is similar to the fifth. However, it analyzes the results of sequential and parallel clients experiments.
+
+The last chapter finishes this study with a conclusion regarding QUIC's use on cloud.

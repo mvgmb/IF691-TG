@@ -1,0 +1,16 @@
+\section{Ephemeral and Persistent Clients Experiments}
+
+As experiments were described in the \textit{Experiments} section, this section contains all results regarding ephemeral and sequential persistent clients, referred, respectively, as ephemeral and persistent clients.
+
+It's divided into two subsections: transport-layer protocols and application-layer protocols. Each subsection is divided into three subsections: Latency \& Throughput, CPU Usage, and Memory Usage. Consequently, all 
+metrics collected are analysed.
+
+\input{content/transport_ephemeral/main}
+
+\input{content/application_ephemeral/main}
+
+\subsection{Summary}
+
+This section explained the results obtained from ephemeral and persistent clients. It showed how each protocol performed when having to create multiple clients and establish multiple connections. Thus, the overhead related with creating connections is exposed.
+
+The following section explores parallelism. Instead of creating new clients for each connection and performing requests sequentially, it performs multiple requests at the same time. Therefore, it experiments with each protocol concurrent features.

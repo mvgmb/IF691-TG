@@ -1,0 +1,93 @@
+\section{Experiments Setup}
+
+This section explains the reasons for each experiment's characteristics, why each scenario is considered, what they bring to the table, and what kind of metrics are going to be collected.
+
+\gls{udp}, \gls{tcp}, \gls{tcp}+\gls{tls} and QUIC transport-layer protocols will be compared. In addition, \gls{http}/1, \gls{http}/1+\gls{tls}, \gls{http}/2, \gls{http}/2+\gls{tls} and \gls{http}/3 application-layer protocols will also be compared.
+
+Ephemeral and persistent clients are going to be used, each running in three scenarios:
+\begin{itemize}
+    \item Multi-AZ, different nodes in different \gls{az}s
+    \item Same-AZ, different nodes in the same \gls{az}
+    \item Local, same node
+\end{itemize}
+
+Persistent clients are used in two kinds of experiments: sequential and concurrent. The former simulates clients that are able to maintain a connection, but are only able to send one request at a time in a sequential manner. The concurrent experiments, however, simulates most services, which are able to maintain a connection and perform multiple requests simultaneously. These connections are limited to a maximum of 100 simultaneous requests.
+
+All experiments will be performed in a \gls{k8s} Cluster deployed on \gls{aws} using \gls{eks}. Metrics collected will be:
+\begin{itemize}
+    \item Latency
+    \item Throughput
+    \item \gls{cpu}
+    \item Memory
+\end{itemize}
+
+All experiments are executed using a simple demo application that implements every protocol in the most efficient and similar way. It is a simple application since all it does is establish a connection with the server, send a fixed amount of data, wait and receive its response, and, depending on the type of client, either close the connection or keep sending requests.
+
+
+\subsection{About Protocols}
+
+Since QUIC is a transport-layer protocol, it makes sense to compare it with other protocols from the same layer. This enables observation on how they perform under the same circumstances.
+
+QUIC replaces most of the \gls{https} stack: \gls{http}/2, \gls{tls}, and \gls{tcp}. Therefore, it will be compared against \gls{udp}, \gls{tcp}, and \gls{tcp}+\gls{tls} transport protocols.. By making this comparison only in the transport layer, there will be less variables to consider when analysing the results.
+
+Since QUIC uses \gls{udp} as part of its implementation, it is also considered, as it might show how effectively it’s used by QUIC.
+
+\gls{udp} is used in its pure implementation, therefore no additional logic is incorporated to be able to grasp its performance. This means there might be scenarios in which it will not be able to successfully finish experiments due to its unreliable nature.
+
+In addition, \gls{http}/3, also known as \gls{http} over QUIC, will be compared against its predecessors: \gls{http}/1 and \gls{http}/2. Comparing application-layer protocols enables us to observe QUIC’s impact on a real-world situation, since applications will not use QUIC directly, but through \gls{http}. Furthermore, QUIC also performs \gls{tls}’ role of securing \gls{http}’s traffic, therefore \gls{http}/1+\gls{tls} and \gls{http}/2+\gls{tls} protocols will also be tested.
+
+\subsection{About Clients}
+
+By separating clients into persistent and ephemeral categories, experiments are able to simulate two very common scenarios on distributed systems and observe how QUIC behaves when having to deal with each one of them.
+
+The first scenario explores ephemeral connections, representing when we have a job that needs to perform some sort of finite task, creating a single connection to the server, and closing it once it’s done.
+
+The second scenario explores persistent connections, representing when we have a service that needs to communicate with a database to provide some kind of functionality, creating a single connection to the database throughout its entire lifetime.
+
+\subsection{About Kubernetes}
+
+All experiments are made inside a \gls{k8s} Cluster since it is a production-grade container orchestrator, a common production environment used by most companies that have to deal with container management in the cloud.
+
+By choosing to use this environment, it not only reflects an actual production scenario, but also allows easy networking setup for nodes running on different \gls{az}s. Running nodes on different \gls{az}s is a requirement due to high availability, as every data center is always under the danger of downtime due to a natural disaster or to some event that damages some of the datacenter’s infrastructure. Therefore, Multi-\gls{az} is a must have for companies that require a disaster recovery plan to be able to deal with such catastrophic events.
+
+During the experiments, three scenarios are taken into account: when the client and server are running in the same node, when they are running in different nodes while in the same \gls{az}, and when they are running in different nodes while in different \gls{az}s. These are all possible scenarios when using \gls{k8s} since client and server applications may be running in any node, depending on the configuration.
+
+To be able to control which nodes were going to be used by each application during experiments, pod affinity and taint were configured to be able either force a pod to be scheduled on required nodes.
+
+During the local scenario, pod taint was used to make pods to be scheduled to a node in the same \gls{az}, and pod anti-affinity and affinity were used to make client and server pods to be scheduled to the same node. During the different nodes in the Single-\gls{az} scenario, pod taint was also used to schedule pods to nodes in the same \gls{az}, but only pod anti-affinity was used to make sure there was only one pod running in each node. The last scenario required pods to be running on nodes in different \gls{az}s, pod taint was used to schedule pods to different \gls{az}s, while pod-affinity was also used to make sure there was only one pod running in each node.
+
+\subsection{About Metrics}
+
+QUIC has an increased usage in memory and \gls{cpu} since the focus during development was performance and not efficiency, resulting in an initial raise by 3.5 times of \gls{cpu} utilization when compared to \gls{tcp}+\gls{tls} traffic [14]. Optimizations were made after this assessment, decreasing the \gls{cpu} usage to 2 times \gls{tcp}+\gls{tls}’, however it’s still believed that, even after more optimizations, this increased cost will always exist.
+
+Latency and throughput are also analyzed to be able to grasp a better understanding on how performatic each protocol is in relation to how fast it can respond to requests and exactly how much data can be transmitted every second.
+
+\subsection{About Demo Application}
+
+Developed in Go, this demo application aims to implement every protocol used during these experiments in the most efficient and similar way.
+
+Each protocol must implement an ephemeral client, a persistent client and a server. 
+
+The ephemeral client’s job is to establish a connection with the server, send a single request, wait for its response and close the connection, this can be performed multiple times, always resulting in a closed connection after a single request. 
+
+The persistent client’s job is similar to the former, the only difference being multiple requests can be made within a single connection. Two kinds of experiments are performed with this type of client: sequential and concurrent. The former simulates clients that do not support concurrent requests, therefore is only able to send one request at a time. The concurrent experiment, otherwise, simulates services that are able to perform multiple requests at the same time. Microsoft states most gRPC servers set concurrent requests limit to 100 by default [27]. Therefore, this experiment set the same limit to be able to simulate a real-world scenario.
+
+The server’s job is to receive a request, and send a response with a fixed amount of data in it.
+
+The size of data sent within the requests and responses is predetermined in compilation time. This value varies in the following manner: 2KiB, 8KiB, 32KiB, 128KiB, and 512KiB. These values were chosen due to the fact that they are a reasonable size of data transfer amongst services running in the cloud. Kafka's maximum package size’s default value is 1MB, because packages with more than 10MB can affect the performance of the cluster [25]. gRPC limits incoming messages size to 4MB to help prevent it from consuming excessive resources [26].
+
+\subsection{About \gls{aws}}
+
+\gls{aws} is one of the most popular cloud providers, offering a wide range of services. It was used as a provider due to its accessible price and since it met all experiments requirements. For instance, it allows use of \gls{aws} \gls{ec2}, \gls{aws}’ equivalent to \gls{vm}, to perform experiments.
+
+Pricing was also taken into account when preparing for experiments. \gls{aws} not only charges for the \gls{ec2} instance and \gls{eks}, but also for data transfer between \gls{az}s, resulting in a hefty cost when exchanging terabytes of data.
+
+During each experiment, 10000 requests are made. Therefore, one of the Multi-\gls{az} experiments, transferring requests and responses with 512KiB of data of a single protocol, transfers a total of 9.77 GiB of data. \gls{aws} charges \$0.02 per GiB transferred between \gls{az}s, resulting in an approximate cost of \$0.20 per experiment. With 9 protocols, ephemeral client, and persistent client with sequential and concurrent scenarios, all Multi-\gls{az} experiments with 512KiB of data costs approximately \$5.28.
+
+\gls{az}s utilized during experiments were us-east-1 (use1-az1) and us-east-1b (use1-az2). The latter was only used during Multi-\gls{az} testing, while other experiments only used use1-az1.
+
+The \gls{ec2} instance type used during experiments was m6i.xlarge. Initial experiments were performed with the smallest instance m6i.large and \gls{cpu} limit on \gls{k8s} was set to 1 \gls{cpu} per pod. This, however, resulted in interfering with QUIC results since this protocol was suffering throttled. To avoid throttling, this \gls{cpu} limit was removed and \gls{ec2} instance type was changed to xlarge, which contains 2 \gls{cpu}s instead of 1, assuring the pod will have all computational power it needs to perform as intended.
+
+\subsection{Summary}
+
+<INSERT>

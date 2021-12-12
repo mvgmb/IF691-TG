@@ -24,9 +24,9 @@ Since \gls{tcp} is connection-oriented, it needs to keep certain status informat
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/tcp_handshake.png}
-    \caption{\gls{tcp}’s Three-Way Handshake}
-    {Source: ADD SOURCE}
+    \includegraphics[width=\linewidth]{figures/3-s2.0-B9780128024379000059-f05-08-9780128024379.jpg}
+    \caption{TCP Three-Way Handshake}
+    {Source: \cite{telecom_network_security}}
     \label{figure:tcp_handshake}
 \end{figure}
 
@@ -50,9 +50,9 @@ To be able to establish a \gls{tls} connection, the sender and receiver must neg
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/tls_handshake.png}
-    \caption{\gls{tls} Handshake}
-    {Source: ADD SOURCE}
+    \includegraphics[width=\linewidth]{figures/tls-ssl-handshake.png}
+    \caption{TLS Handshake}
+    {Source: \cite{what_is_a_tls_handshake}}
     \label{figure:tls_handshake}
 \end{figure}
 
@@ -96,9 +96,9 @@ QUIC is a secure general-purpose transport protocol designed to improve performa
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/quic_http2_layers.png}
-    \caption{\gls{https} vs QUIC Layers}
-    {Source: ADD SOURCE}
+    \includegraphics[width=\linewidth]{figures/Introduction.png}
+    \caption{QUIC in the traditional HTTPS stack}
+    {Source: \cite{quic_protocol}}
     \label{figure:quic_http2_layers}
 \end{figure}
 
@@ -106,15 +106,15 @@ As the Internet evolves, software requires fast deployment of changes both to im
 
 A middlebox is when a device adds functionality other than packet forwarding to an IP router, such as filtering, altering, and manipulating traffic \cite{rfc3234}. Improvements to transport protocols is reduced due to the fact that these kinds of devices are hard to be removed or upgraded, creating a dependency between them. For example, firewalls tend to block any unknown traffic for security reasons, meaning that new transport protocols need to be explicitly supported \cite{rfc3234}. QUIC addresses this issue by encrypting its packets, therefore avoiding middlebox dependency and data tampering \cite{quic_protocol}.
 
-gls{http}/2 solves the HOL blocking problem in the application layer by introducing request multiplexing, however it still suffers from this problem in the transport layer. Even though \gls{http}/2 streams are independent of each other, they still had to share a \gls{tcp} connection and deal with \gls{tcp}’s window size. If the first window segment fails, the window cannot go further and blocks new segments from being transmitted. QUIC solves this problem by implementing stream multiplexing. More than one stream within a connection means that even if one stream drops packets, other streams will not be blocked in any way.
+\gls{http}/2 solves the HOL blocking problem in the application layer by introducing request multiplexing, however it still suffers from this problem in the transport layer. Even though \gls{http}/2 streams are independent of each other, they still had to share a \gls{tcp} connection and deal with \gls{tcp}’s window size. If the first window segment fails, the window cannot go further and blocks new segments from being transmitted. QUIC solves this problem by implementing stream multiplexing. More than one stream within a connection means that even if one stream drops packets, other streams will not be blocked in any way.
 
 \gls{https} is required to perform both \gls{tcp} and \gls{tls} handshakes to establish a secure connection, resulting in generally a 3-\gls{rtt} connection setup (Figure \ref{figure:tcp_v_tls_v_quic_handshake}) to be able to start transmitting the actual data \cite{rfc7413}.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/tls_handshake.png}
-    \caption{\gls{tls} Handshake}
-    {Source: ADD SOURCE}
+    \includegraphics[width=\linewidth]{figures/quic_zerortt.png}
+    \caption{Zero RT Connection Establishment}
+    {Source: \cite{google_edge_network}}
     \label{figure:tcp_v_tls_v_quic_handshake}
 \end{figure}
 
@@ -122,9 +122,9 @@ QUIC improves the handshake delay by minimizing the steps required to establish 
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\linewidth]{figures/quic_handshake.png}
-    \caption{QUIC Handshake}
-    {Source: ADD SOURCE}
+    \includegraphics[width=\linewidth]{figures/ConnectionEstablishment.png}
+    \caption{Timeline of QUIC’s initial 1-RTT handshake, a subsequent successful 0-RTT handshake, and a failed 0-RTT handshake}
+    {Source: \cite{quic_protocol}}
     \label{figure:quic_handshake}
 \end{figure}
 
@@ -136,7 +136,10 @@ While QUIC improves transport efficiency, it demands more computational resource
 
 \subsection{HTTP/3}
 
-\gls{http}/3 is effectively \gls{http} over QUIC. It provides a transport for gls{http} semantics using QUIC as transport protocol, therefore it maintains all the same request methods, status codes, and messages fields. It still does not have an official \gls{rfc}, however it possesses an initial draft [32]. Nonetheless, it is supported by 74% of running web browsers, Google Chrome being one of them [33].
+\gls{http}/3 is effectively \gls{http} over QUIC. It provides a transport for \gls{http} semantics using QUIC as transport protocol, therefore it maintains all the same request methods, status codes, and messages fields. It still does not have an official \gls{rfc}, however it possesses an initial draft [32]. Nonetheless, it is supported by 74\% of running web browsers, Google Chrome being one of them [33].
 
 \subsection{Summary}
-<INSERT>
+
+This section went over the important aspects of each transport-layer and application-layer protocols experimented throughout this study. Therefore, their differences should be clear, as well as what they try to improve.
+
+The next section will explore a few aspects of distributed systems on cloud environment. These systems makes extensive use of the observed protocols as a way of communicating with each other. Without them, however, they would not be able to talk to each other and achieve cooperation.
